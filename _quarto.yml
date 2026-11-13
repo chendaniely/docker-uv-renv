@@ -7,4 +7,7 @@ format:
   html:
     embed-resources: true
   # PDF via Typst, which comes with Quarto
-  typst: default
+  typst:
+    # png, not svg: R's svg figures need XQuartz on a Mac
+    # not needed for local work, only CI
+    fig-format: png
