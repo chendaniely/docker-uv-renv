@@ -1,8 +1,0 @@
-Type: project
-Version: 2026.11.13
-Description: The R packages this project uses. renv.lock locks them.
-Depends:
-    dplyr (== 1.2.1),
-    ggplot2 (== 4.0.3),
-    knitr (== 1.52),
-    rmarkdown (== 2.32)
