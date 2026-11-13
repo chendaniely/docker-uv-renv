@@ -1,0 +1,10 @@
+project:
+  # otherwise README.md renders too
+  render:
+    - reports/*.qmd
+
+format:
+  html:
+    embed-resources: true
+  # PDF via Typst, which comes with Quarto
+  typst: default

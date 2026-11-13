@@ -1,0 +1,21 @@
+---
+title: "Example report (Python)"
+---
+
+```{python}
+import altair as alt
+import pandas as pd
+
+# png, so the chart also shows in the PDF
+_ = alt.renderers.enable("png", scale_factor=2)
+
+data = pd.DataFrame({
+    "category": ["A", "A", "B", "B", "C", "C"],
+    "value": [3, 5, 6, 8, 2, 4],
+})
+data.groupby("category").mean()
+```
+
+```{python}
+alt.Chart(data).mark_point().encode(x="category", y="value")
+```

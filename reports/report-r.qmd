@@ -1,0 +1,20 @@
+---
+title: "Example report (R)"
+---
+
+```{r}
+#| message: false
+library(dplyr)
+library(ggplot2)
+
+data <- tibble(
+  category = c("A", "A", "B", "B", "C", "C"),
+  value = c(3, 5, 6, 8, 2, 4)
+)
+data |> group_by(category) |> summarise(value = mean(value))
+```
+
+```{r}
+ggplot(data, aes(x = category, y = value)) +
+  geom_point()
+```

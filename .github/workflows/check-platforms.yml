@@ -1,0 +1,58 @@
+# Not for teaching.
+# Checks that the image and the lockfiles work
+# on every operating system and chip students have.
+# Nothing is pushed anywhere.
+# generated with Claude Opus 5.5 2026-11-13
+
+name: Check all platforms
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  # The image on Intel/AMD and on ARM.
+  docker:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build --tag docker-uv-renv .
+      - run: docker run --rm --volume "$PWD:/workspace" docker-uv-renv uv run quarto render
+
+  # Without Docker, as on a student's own computer.
+  # (GitHub's macOS and Windows runners can't run Linux containers.)
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-latest, macos-15-intel, windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.runner }}
+    # Windows ARM has no native Quarto and no vl-convert-python wheel,
+    # so a failure there is reported but allowed
+    continue-on-error: ${{ matrix.runner == 'windows-11-arm' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          version: "0.13.7"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "4.6.2"
+      - uses: r-lib/actions/setup-renv@v2
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.11.9"
+      # Windows ARM: use Intel Python,
+      # which runs under emulation and has every wheel
+      - if: matrix.runner == 'windows-11-arm'
+        shell: bash
+        run: echo "UV_PYTHON=cpython-3.14-windows-x86_64-none" >> "$GITHUB_ENV"
+      - run: uv sync --locked
+      - run: uv run quarto render
