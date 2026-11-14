@@ -1,126 +1,99 @@
-# docker-uv-renv
+# Breast Cancer Predictor
 
-An example project for UBC's DSCI 522 and DSCI 310,
-which use the textbook
-[Reproducible and Trustworthy Workflows for Data Science](https://ubc-dsci.github.io/reproducible-and-trustworthy-workflows-for-data-science/).
-You work inside a Docker container, over ssh.
+  - author: Tiffany Timbers, Melissa Lee & Joel Ostblom
+  - adapted to uv and Quarto by: Daniel Chen & Kehan Sky Sheng
 
-- Python packages: `pyproject.toml`, locked in `uv.lock`
-- R packages: `DESCRIPTION`, locked in `renv.lock`
-- Reports: Quarto, in `reports/`, as HTML and PDF (Typst, no LaTeX)
+Demo of a data analysis project for DSCI 522 (Data Science workflows); a
+course in the Master of Data Science program at the University of
+British Columbia.
 
-Run `make` to see the commands.
+## About
 
-```mermaid
-flowchart LR
-  subgraph laptop["Your computer"]
-    positron["Positron or a terminal"]
-    folder["This folder"]
-  end
-  subgraph container["Container"]
-    sshd["ssh server"]
-    ws["/workspace"]
-  end
-  positron -- "ssh, port 2222" --> sshd
-  folder -- "mounted at" --> ws
+Here we attempt to build a classification model using the k-nearest
+neighbours algorithm which can use breast cancer tumour image
+measurements to predict whether a newly discovered breast cancer tumour
+is benign (i.e., is not harmful and does not require treatment) or
+malignant (i.e., is harmful and requires treatment intervention).
+Our final classifier performed fairly well on an unseen test data set,
+with F2 = 0.98
+and an overall accuracy calculated to be 0.96. On the 171 test data cases,
+it correctly predicted 168.
+It incorrectly predicted 3 cases,
+however these were false positives, predicting that a tumour is malignant
+when in fact it is benign.
+These kind of incorrect predictions could cause the patient
+to undergo unnecessary treatment,
+and as such we recommend further research to improve the model
+before it is ready to be put into production in the clinic.
+
+The data set that was used in this project is of digitized breast cancer
+image features created by Dr. William H. Wolberg, W. Nick Street, and
+Olvi L. Mangasarian at the University of Wisconsin, Madison (Street,
+Wolberg, and Mangasarian 1993). It was sourced from the UCI Machine
+Learning Repository (Dua and Graff 2017) and can be found
+[here](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+\(Diagnostic\)),
+specifically [this
+file](http://mlr.cs.umass.edu/ml/machine-learning-databases/breast-cancer-wisconsin/wdbc.data).
+Each row in the data set represents summary statistics from measurements
+of an image of a tumour sample, including the diagnosis (benign or
+malignant) and several other measurements (e.g., nucleus texture,
+perimeter, area, etc.). Diagnosis for each image was conducted by
+physicians.
+
+## Report
+
+The final report can be found
+[here](https://ubc-mds.github.io/DSCI_522_project-template-breast-cancer-predictor/reports/breast_cancer_predictor_report.html)
+(HTML), or as a
+[PDF](reports/breast_cancer_predictor_report.pdf).
+
+## Usage
+
+First time running the project,
+install [uv](https://docs.astral.sh/uv/getting-started/installation/)
+and [Quarto](https://quarto.org/docs/get-started/),
+then run the following from the root of this repository
+to create the virtual environment:
+
+``` bash
+uv sync
 ```
 
-## Start
+To run the analysis and render the report,
+run the following from the root of this repository:
 
-1. Make an ssh key if you don't have one: `ssh-keygen -t ed25519`
-2. `make build`
-3. `make up`
-4. `make shell` opens a terminal in the container, in `/workspace`
-   - Or log in over ssh: `make ssh`, then `cd /workspace` (see below optional step)
-
-`/workspace` is this folder: change a file in one and it changes in the other.
-`make down` stops the container.
-
-Port 2222 on your computer goes to ssh's port, 22, in the container.
-Your computer may already use 22.
-To change it, edit `docker-compose.yml` and the `Makefile`.
-
-## Connect with Positron
-
-Open the Command Palette,
-run "Remote SSH: Show Remote Menu",
-pick "Connect to Host",
-and type `root@localhost:2222`.
-Open `/workspace`.
-For Python, pick `/opt/venv/bin/python`.
-
-## Add a package
-
-In the container, in `/workspace`:
-
-```bash
-uv add scikit-learn
+``` bash
+uv run quarto render
 ```
 
-```r
-renv::install("tidyr")
-packageVersion("tidyr")   # add tidyr (== that version) to DESCRIPTION
-renv::snapshot()
-```
+The rendered report is written to
+`reports/breast_cancer_predictor_report.html` and
+`reports/breast_cancer_predictor_report.pdf`.
 
-Then `make build` and `make up` on your computer,
-and commit `pyproject.toml`, `uv.lock`, `DESCRIPTION` and `renv.lock`.
+## Dependencies
 
-If an R package won't install,
-`renv::sysreqs("tidyr")` lists the Ubuntu packages it needs.
-Add them to the `Dockerfile`.
+- [uv](https://docs.astral.sh/uv/) (version 0.12 or higher)
+- [Quarto](https://quarto.org/) (version 1.10 or higher)
+- Python and packages listed in [`pyproject.toml`](pyproject.toml)
+  (exact versions are locked in [`uv.lock`](uv.lock))
 
-## Render the reports
+## License
 
-`uv run quarto render` in the container,
-or `make render` from your computer.
-The HTML and PDF files go in `reports/`.
+The Breast Cancer Predictor report contained herein is licensed under the
+[Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+See [the license file](LICENSE.md) for more information. If
+re-using/re-mixing please provide attribution and link to this webpage.
+The software code contained within this repository is licensed under the
+MIT license. See [the license file](LICENSE.md) for more information.
 
-## If something goes wrong
+## References
 
-- `~/.ssh/id_ed25519.pub` is a folder:
-  Docker made it because the key didn't exist yet.
-  Delete the folder, make the key, try again.
-- Your key has a different name: change it in `docker-compose.yml`.
-- Positron says the host key changed: you rebuilt the image.
-  Run `ssh-keygen -R "[localhost]:2222"`, then connect again.
+Dua, Dheeru, and Casey Graff. 2017. "UCI Machine Learning Repository."
+University of California, Irvine, School of Information; Computer
+Sciences. <http://archive.ics.uci.edu/ml>.
 
-## Run one command with `docker run`
-
-`make up` runs the image's `CMD`, the ssh server.
-Type a command after the image name and it runs instead:
-
-```bash
-docker run --rm -it docker-uv-renv bash    # bash, no ssh server. -it: so you can type
-docker run --rm -v "$PWD:/workspace" docker-uv-renv uv run quarto render
-```
-
-`-v` mounts this folder at `/workspace`, as `docker-compose.yml` does.
-The packages are installed in `/opt`, not `/workspace`,
-because the mount hides whatever the image put there.
-
-Replaces [docker-condalock-jupyterlab](https://github.com/chendaniely/docker-condalock-jupyterlab).
-
-
-## Optional: an ssh shortcut
-
-`make ssh` runs this:
-
-```bash
-ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost
-```
-
-The two `-o` options skip the host key check,
-because the container's key can change when the image is rebuilt.
-To type `ssh docker-uv-renv` instead,
-and pick `docker-uv-renv` from a list in Positron,
-add this to `~/.ssh/config`:
-
-```
-Host docker-uv-renv
-  HostName localhost
-  Port 2222
-  User root
-  StrictHostKeyChecking no
-  UserKnownHostsFile /dev/null
-```
+Street, W. Nick, W. H. Wolberg, and O. L. Mangasarian. 1993. "Nuclear
+feature extraction for breast tumor diagnosis." In *Biomedical Image
+Processing and Biomedical Visualization*, edited by Raj S. Acharya and
+Dmitry B. Goldgof, 1905:861–70. International Society for Optics;
+Photonics; SPIE. <https://doi.org/10.1117/12.148698>.
