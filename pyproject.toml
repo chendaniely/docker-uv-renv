@@ -1,5 +1,20 @@
 [project]
 name = "dsci-522-project-template-breast-cancer-predictor"
-version = "0.1.0"
+version = "0.0.1"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "altair==6.3.0",
+    "ipykernel==7.4.0",
+    "nbclient==0.11.0",
+    "numpy==2.5.4",
+    "pandas==3.1.1",
+    "pyarrow==26.0.1",
+    "pyyaml==6.0.3",
+    "requests==2.34.2",
+    "scikit-learn==1.9.1",
+    "vegafusion==2.0.3",
+    "vl-convert-python==1.9.0.post1",
+]
+[tool.uv]
+# `uv add` writes an exact version (==)
+add-bounds = "exact"
