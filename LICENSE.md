@@ -2,7 +2,7 @@
 
 ## Analysis report
 
-Copyright (c) 2023
+Copyright (c) 2026
 
 This report (source contained in the [`breast_cancer_predictor_py` repository](https://github.com/ttimbers/breast_cancer_predictor_py)) is made available under the **Attribution-NonCommercial-ShareAlike 4.0 International** ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)). 
 
@@ -33,7 +33,7 @@ No warranties are given. The license may not give you all of the permissions nec
 
 MIT License
 
-Copyright (c) 2023 Tiffany A. Timbers, Joel Ostblom, Melissa Lee, Daniel Chen, Kehan Sky Sheng
+Copyright (c) 2026 Tiffany A. Timbers, Joel Ostblom, Melissa Lee, Daniel Chen, Kehan Sky Sheng
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
