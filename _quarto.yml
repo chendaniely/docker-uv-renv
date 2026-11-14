@@ -6,6 +6,7 @@ project:
 format:
   html:
     embed-resources: true
+    toc: true
   # PDF via Typst, which comes with Quarto
   typst:
     # png, not svg: R's svg figures need XQuartz on a Mac

@@ -3,6 +3,6 @@
 .RData
 /.quarto/
 **/*.quarto_ipynb
-reports/*.html
-reports/*.pdf
+**.ipynb_checkpoints
+**__pycache__
 .DS_Store
